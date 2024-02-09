@@ -499,6 +499,12 @@ config ZMK_KSCAN_EVENT_QUEUE_SIZE
 
 endif # ZMK_KSCAN
 
+
+config ZMK_KEYMAP_SHELL
+    bool "Keymap Shell Command"
+    default y
+    depends on SHELL
+
 menu "Logging"
 
 config ZMK_LOGGING_MINIMAL
