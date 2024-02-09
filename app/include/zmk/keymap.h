@@ -24,6 +24,8 @@ int zmk_keymap_layer_toggle(uint8_t layer);
 int zmk_keymap_layer_to(uint8_t layer);
 const char *zmk_keymap_layer_name(uint8_t layer);
 
+struct zmk_behavior_binding *zmk_keymap_layer_get_binding(uint8_t layer, uint8_t pos);
+
 int zmk_keymap_position_state_changed(uint8_t source, uint32_t position, bool pressed,
                                       int64_t timestamp);
 

@@ -163,6 +163,18 @@ const char *zmk_keymap_layer_name(uint8_t layer) {
     return zmk_keymap_layer_names[layer];
 }
 
+struct zmk_behavior_binding *zmk_keymap_layer_get_binding(uint8_t layer, uint8_t pos) {
+    if (layer >= ZMK_KEYMAP_LAYERS_LEN) {
+        return NULL;
+    }
+
+    if (pos >= ZMK_KEYMAP_LEN) {
+        return NULL;
+    }
+
+    return &zmk_keymap[layer][pos];
+}
+
 int invoke_locally(struct zmk_behavior_binding *binding, struct zmk_behavior_binding_event event,
                    bool pressed) {
     if (pressed) {
