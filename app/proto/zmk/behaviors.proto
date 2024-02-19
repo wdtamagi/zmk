@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package zmk.behaviors;
+
+message Request {
+    oneof request_type {
+        bool list_all_behaviors = 1;
+        GetBehaviorDetailsRequest get_behavior_details = 2;
+    }
+}
+
+message GetBehaviorDetailsRequest {
+    uint32 behavior_id = 1;
+}
+
+message Response {
+    oneof response_type {
+        ListAllBehaviorsResponse list_all_behaviors = 1;
+        GetBehaviorDetailsResponse get_behavior_details = 2;
+    }
+}
+
+message ListAllBehaviorsResponse {
+    repeated uint32 behaviors = 1;
+}
+
+message GetBehaviorDetailsResponse {
+    uint32 id = 1;
+    string friendly_name = 2;
+    oneof parameters_type {
+        BehaviorBindingParametersStandard standard = 3;
+        BehaviorBindingParametersCustom custom = 4;
+    }
+}
+
+message BehaviorBindingParametersStandard {
+    BehaviorBindingParameterStandardDomain param1 = 1;
+    BehaviorBindingParameterStandardDomain param2 = 2;
+}
+
+enum BehaviorBindingParameterStandardDomain {
+    NIL = 0;
+    HID_USAGE = 1;
+    LAYER_INDEX = 2;
+    HSV_VALUE = 3;
+}
+
+message BehaviorBindingParametersCustom {
+    repeated BehaviorBindingParametersCustomSet param_sets = 1;
+}
+
+message BehaviorBindingParametersCustomSet {
+    repeated BehaviorParameterValueDescription param1 = 1;
+    repeated BehaviorParameterValueDescription param2 = 2;
+}
+
+message BehaviorParameterValueDescriptionRange {
+    uint32 min = 1;
+    uint32 max = 2;
+}
+
+message BehaviorParameterValueDescription {
+    string name = 1;
+
+    oneof value_type {
+        uint32 constant = 2;
+        BehaviorParameterValueDescriptionRange range = 3;
+        BehaviorBindingParameterStandardDomain standard = 4;
+    }
+}

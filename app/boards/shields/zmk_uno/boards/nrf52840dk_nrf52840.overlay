@@ -23,3 +23,15 @@ encoder: &qdec0 {
     pinctrl-1 = <&qdec_default>;
     pinctrl-names = "default", "sleep";
 };
+
+/ {
+    chosen {
+        zmk,studio-rpc-uart = &studio_uart;
+    };
+};
+
+&zephyr_udc0 {
+    studio_uart: studio_uart {
+        compatible = "zephyr,cdc-acm-uart";
+    };
+};

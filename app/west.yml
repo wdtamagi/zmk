@@ -29,5 +29,9 @@ manifest:
           - openthread
           - edtt
           - trusted-firmware-m
+    - name: nanopb
+      revision: 65cbefb4695bc7af1cb733ced99618afb3586b20
+      path: modules/lib/nanopb
+      remote: zephyrproject-rtos
   self:
     west-commands: scripts/west-commands.yml

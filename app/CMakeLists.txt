@@ -33,6 +33,7 @@ target_sources_ifdef(CONFIG_ZMK_EXT_POWER app PRIVATE src/ext_power_generic.c)
 target_sources(app PRIVATE src/events/activity_state_changed.c)
 target_sources(app PRIVATE src/events/position_state_changed.c)
 target_sources(app PRIVATE src/events/sensor_event.c)
+
 target_sources(app PRIVATE src/events/mouse_button_state_changed.c)
 target_sources_ifdef(CONFIG_ZMK_WPM app PRIVATE src/events/wpm_state_changed.c)
 target_sources_ifdef(CONFIG_USB_DEVICE_STACK app PRIVATE src/events/usb_conn_state_changed.c)
@@ -101,5 +102,22 @@ target_sources(app PRIVATE src/main.c)
 
 add_subdirectory(src/display/)
 add_subdirectory_ifdef(CONFIG_SETTINGS src/settings/)
+
+if (CONFIG_ZMK_STUDIO)
+  # For some reason this is failing if run from a different sub-file.
+  list(APPEND CMAKE_MODULE_PATH ${ZEPHYR_BASE}/modules/nanopb)
+
+  include(nanopb)
+
+  zephyr_nanopb_sources(app
+                        proto/zmk/studio.proto
+                        proto/zmk/meta.proto
+                        proto/zmk/core.proto
+                        proto/zmk/behaviors.proto
+                        proto/zmk/keymap.proto
+                        )
+
+  add_subdirectory(src/studio)
+endif()
 
 zephyr_cc_option(-Wfatal-errors)

@@ -1,0 +1,52 @@
+# Copyright (c) 2024 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+menuconfig ZMK_STUDIO
+    bool "Studio Support"
+    select NANOPB
+    # These two save stack size
+    imply NANOPB_NO_ERRMSG
+    imply  NANOPB_WITHOUT_64BIT
+    select ZMK_BEHAVIOR_METADATA
+    help
+      Add firmware support for realtime keymap updates (ZMK Studio
+
+if ZMK_STUDIO
+
+menu "Remote Procedure Calls (RPC)"
+
+menu "Transports"
+
+config ZMK_STUDIO_TRANSPORT_UART
+    bool "Serial"
+    select SERIAL
+    select RING_BUFFER
+    default y if ZMK_USB
+
+config ZMK_STUDIO_TRANSPORT_BLE
+    bool "BLE (GATT)"
+    select RING_BUFFER
+    select BT_USER_DATA_LEN_UPDATE
+    depends on ZMK_BLE
+    default y
+
+config BT_CONN_TX_MAX
+    default 64 if ZMK_STUDIO_TRANSPORT_BLE
+
+endmenu
+
+config ZMK_STUDIO_RPC_THREAD_STACK_SIZE
+    int "RPC Thread Stack Size"
+    default 1800
+
+config ZMK_STUDIO_RPC_RX_BUF_SIZE
+    int "RX Buffer Size"
+    default 30
+
+config ZMK_STUDIO_RPC_TX_BUF_SIZE
+    int "RX Buffer Size"
+    default 64
+
+endmenu
+
+endif
