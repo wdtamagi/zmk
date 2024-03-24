@@ -1,8 +1,53 @@
 # Copyright (c) 2023 The ZMK Contributors
 # SPDX-License-Identifier: MIT
 
-config ZMK_MOUSE
+menuconfig ZMK_MOUSE
     bool "Mouse Emulation"
     select INPUT
     select INPUT_THREAD_PRIORITY_OVERRIDE
+    select USB_COMPOSITE_DEVICE if ZMK_USB
 
+if ZMK_MOUSE
+
+if ZMK_USB
+
+config USB_HID_DEVICE_COUNT
+    default 2
+
+endif
+
+config ZMK_TRACKPAD
+    bool "Trackpad support"
+    select ENABLE_HID_INT_OUT_EP if ZMK_USB
+
+if ZMK_TRACKPAD
+
+if ZMK_USB
+
+config USB_REQUEST_BUFFER_SIZE
+    default 512
+
+config HID_INTERRUPT_EP_MPS
+    default 64
+
+endif
+
+config ZMK_TRACKPAD_FINGERS
+    int "Max simultaneous fingers"
+    default 5
+
+config ZMK_TRACKPAD_LOGICAL_X
+    int "Logical X"
+
+config ZMK_TRACKPAD_LOGICAL_Y
+    int "Logical Y"
+
+config ZMK_TRACKPAD_PHYSICAL_X
+    int "Physical X"
+
+config ZMK_TRACKPAD_PHYSICAL_Y
+    int "Physical Y"
+
+endif # ZMK_TRACKPAD
+
+endif # ZMK_MOUSE

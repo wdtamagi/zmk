@@ -15,6 +15,9 @@
 #include <dt-bindings/zmk/hid_usage_pages.h>
 #include <zmk/usb_hid.h>
 #include <zmk/hog.h>
+#include <zmk/mouse/hid.h>
+#include <zmk/mouse/hog.h>
+#include <zmk/mouse/usb_hid.h>
 #include <zmk/event_manager.h>
 #include <zmk/events/ble_active_profile_changed.h>
 #include <zmk/events/usb_conn_state_changed.h>
@@ -208,7 +211,7 @@ int zmk_endpoints_send_mouse_report() {
     switch (current_instance.transport) {
     case ZMK_TRANSPORT_USB: {
 #if IS_ENABLED(CONFIG_ZMK_USB)
-        int err = zmk_usb_hid_send_mouse_report();
+        int err = zmk_mouse_usb_hid_send_mouse_report();
         if (err) {
             LOG_ERR("FAILED TO SEND OVER USB: %d", err);
         }
@@ -221,8 +224,8 @@ int zmk_endpoints_send_mouse_report() {
 
     case ZMK_TRANSPORT_BLE: {
 #if IS_ENABLED(CONFIG_ZMK_BLE)
-        struct zmk_hid_mouse_report *mouse_report = zmk_hid_get_mouse_report();
-        int err = zmk_hog_send_mouse_report(&mouse_report->body);
+        struct zmk_hid_mouse_report *mouse_report = zmk_mouse_hid_get_mouse_report();
+        int err = zmk_mouse_hog_send_mouse_report(&mouse_report->body);
         if (err) {
             LOG_ERR("FAILED TO SEND OVER HOG: %d", err);
         }
@@ -238,6 +241,43 @@ int zmk_endpoints_send_mouse_report() {
     return -ENOTSUP;
 }
 #endif // IS_ENABLED(CONFIG_ZMK_MOUSE)
+
+#if IS_ENABLED(CONFIG_ZMK_TRACKPAD)
+int zmk_endpoints_send_ptp_report() {
+    switch (current_instance.transport) {
+    case ZMK_TRANSPORT_USB: {
+#if IS_ENABLED(CONFIG_ZMK_USB)
+        LOG_DBG("Send PTP USB REPORT");
+        int err = zmk_mouse_usb_hid_send_ptp_report();
+        if (err) {
+            LOG_ERR("FAILED TO SEND OVER USB: %d", err);
+        }
+        return err;
+#else
+        LOG_ERR("USB endpoint is not supported");
+        return -ENOTSUP;
+#endif /* IS_ENABLED(CONFIG_ZMK_USB) */
+    }
+
+    case ZMK_TRANSPORT_BLE: {
+#if IS_ENABLED(CONFIG_ZMK_BLE)
+        struct zmk_hid_ptp_report *mouse_report = zmk_mouse_hid_get_ptp_report();
+        int err = zmk_mouse_hog_send_ptp_report(&mouse_report->body);
+        if (err) {
+            LOG_ERR("FAILED TO SEND OVER HOG: %d", err);
+        }
+        return err;
+#else
+        LOG_ERR("BLE HOG endpoint is not supported");
+        return -ENOTSUP;
+#endif /* IS_ENABLED(CONFIG_ZMK_BLE) */
+    }
+    }
+
+    LOG_ERR("Unhandled endpoint transport %d", current_instance.transport);
+    return -ENOTSUP;
+}
+#endif // IS_ENABLED(CONFIG_ZMK_TRACKPAD)
 
 #if IS_ENABLED(CONFIG_SETTINGS)
 

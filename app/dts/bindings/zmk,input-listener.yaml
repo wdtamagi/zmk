@@ -4,6 +4,12 @@ description: |
 compatible: "zmk,input-listener"
 
 properties:
+  mode:
+    type: string
+    default: "mouse"
+    enum:
+      - "mouse"
+      - "trackpad"
   device:
     type: phandle
     required: true
