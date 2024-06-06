@@ -111,6 +111,15 @@ static void zmk_sensors_trigger_handler(const struct device *dev,
         CONTAINER_OF(trigger, struct sensors_item_cfg, trigger);
     int sensor_index = test_item - sensors;
 
+    for (int i = 0; i < ARRAY_SIZE(sensors); i++) {
+        if (sensors[i].dev == dev) {
+            if (i != sensor_index) {
+                LOG_WRN("FOUND A BETTER SENSOR INDEX %d (instead of old %d)", i, sensor_index);
+                sensor_index = i;
+            }
+        }
+    }
+
     if (sensor_index < 0 || sensor_index >= ARRAY_SIZE(sensors)) {
         LOG_ERR("Invalid sensor item triggered our callback (%d)", sensor_index);
         return;
