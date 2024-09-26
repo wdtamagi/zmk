@@ -4,10 +4,12 @@ manifest:
       url-base: https://github.com/zephyrproject-rtos
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
+    - name: petejohanson
+      url-base: https://github.com/petejohanson
   projects:
     - name: zephyr
-      remote: zmkfirmware
-      revision: v3.5.0+zmk-fixes
+      remote: petejohanson
+      revision: v3.5.0+zmk-use-zmk-nanopb-fork-with-stack-size-reduction
       clone-depth: 1
       import:
         name-blocklist:
@@ -30,9 +32,9 @@ manifest:
           - edtt
           - trusted-firmware-m
     - name: nanopb
-      revision: 65cbefb4695bc7af1cb733ced99618afb3586b20
+      revision: bf328175df765d05cbc0c19734af85378af0280c
       path: modules/lib/nanopb
-      remote: zephyrproject-rtos
+      remote: zmkfirmware
     - name: zmk-studio-messages
       revision: a79267a9661241a6603b6da3d2b3f71e8023a9d9
       path: modules/msgs/zmk-studio-messages
